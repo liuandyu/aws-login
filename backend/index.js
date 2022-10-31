@@ -34,6 +34,9 @@ exports.handler = async (event) => {
             response = verifyService.verify(verifyBody);
             //response = utils.buildResponse(200);
             break;
+        case event.httpMethod==='OPTIONS':
+            response = utils.buildCORSResponse(200, 'Success');
+            break;
         
         default:
             response = buildResponse(404, '404 not Found');
