@@ -3,8 +3,51 @@ import Home from './Home.js';
 import Register from './Register.js';
 import Login from './Login.js'
 import PremiumContent from './PremiumContent.js';
+import PublicRoute from './routes/PublicRoute.js';
+import PrivateRoute from './routes/PrivateRoute.js';
+import React, { useState, useEffect } from 'react';
+import{getUser, getToken, setUserSession, resetUserSession} from './service/AuthService';
+import axios from 'axios';
+
+const verifyUrl = 'https://m0z4y5aa2g.execute-api.us-west-2.amazonaws.com/prod/verify';
 
 function App() {
+  const [isAuthenticating, setAuthenticating] = useState(true);
+
+  useEffect(() =>{
+    const token = getToken();
+
+    if(token === 'undefined' || token === undefined || token === null || !token) {
+      return ;
+    }
+
+    const requestConfig = {
+      headers: {
+          'x-api-key': 'jAyp5BfgRr4nMUxHqFmGX6xlefGnO8XYa5VIK4Jx',
+      }
+    }
+
+    const requestBody = {
+      user: getUser(),
+      token: token
+    }
+
+    axios.post(verifyUrl, requestBody, requestConfig).then(response => {
+      setUserSession(response.data.user, response.data.token);
+      setAuthenticating(false);
+    }).catch(error => {
+      resetUserSession();
+      setAuthenticating(false);
+    })
+
+  }, []);
+
+  const token = getToken();
+
+  if(isAuthenticating && token) {
+    return <div className="content">Authenticating...</div>
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -17,9 +60,9 @@ function App() {
         <div className="content">
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route path="/premium-content" component={PremiumContent} />
+            <PublicRoute path="/login" component={Login} />
+            <PublicRoute path="/register" component={Register} />
+            <PrivateRoute path="/premium-content" component={PremiumContent} />
           </Switch>
         </div>
       </BrowserRouter>

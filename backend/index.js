@@ -34,7 +34,7 @@ exports.handler = async (event) => {
             response = verifyService.verify(verifyBody);
             //response = utils.buildResponse(200);
             break;
-        case event.httpMethod==='OPTIONS':
+        case event.httpMethod === 'OPTIONS':
             response = utils.buildCORSResponse(200, 'Success');
             break;
         

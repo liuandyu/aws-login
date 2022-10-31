@@ -15,9 +15,10 @@ const Register = () => {
         if(username.trim() === '' || email.trim() === ''|| name.trim() === '' || password.trim() === ''){
             setMessage('All fields are required')
         }
+        setMessage(null);
         //console.log("submit button is pressed");
         const requestConfig = {
-            header: {
+            headers: {
                 'x-api-key': 'jAyp5BfgRr4nMUxHqFmGX6xlefGnO8XYa5VIK4Jx',
             }
         }
